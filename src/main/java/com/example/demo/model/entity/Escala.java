@@ -17,6 +17,7 @@ public class Escala {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String titulo;
     private Date dataInicio;
     private Date dataFim;
     private Integer qtdDias;
