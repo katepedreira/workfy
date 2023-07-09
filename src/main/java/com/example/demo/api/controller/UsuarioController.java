@@ -31,19 +31,19 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity get(@PathVariable("id") Long id) {
-        Optional<Usuario> procedimento = service.getUsuarioById(id);
-        if (!procedimento.isPresent()) {
+        Optional<Usuario> usuario = service.getUsuarioById(id);
+        if (!usuario.isPresent()) {
             return new ResponseEntity("Usuário não encontrado", HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.ok(procedimento.map(UsuarioDTO::create));
+        return ResponseEntity.ok(usuario.map(UsuarioDTO::create));
     }
 
     @PostMapping()
     public ResponseEntity post(@RequestBody UsuarioDTO dto) {
         try {
-            Usuario procedimento= converter(dto);
-            procedimento = service.salvar(procedimento);
-            return new ResponseEntity(procedimento, HttpStatus.CREATED);
+            Usuario usuario = converter(dto);
+            usuario = service.salvar(usuario);
+            return new ResponseEntity(usuario, HttpStatus.CREATED);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -66,12 +66,12 @@ public class UsuarioController {
 
     @DeleteMapping("{id}")
     public ResponseEntity excluir(@PathVariable("id") Long id) {
-        Optional<Usuario> procedimento = service.getUsuarioById(id);
-        if (!procedimento.isPresent()) {
+        Optional<Usuario> usuario = service.getUsuarioById(id);
+        if (!usuario.isPresent()) {
             return new ResponseEntity("Usuário não encontrado", HttpStatus.NOT_FOUND);
         }
         try {
-            service.excluir(procedimento.get());
+            service.excluir(usuario.get());
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         } catch (RegraNegocioException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

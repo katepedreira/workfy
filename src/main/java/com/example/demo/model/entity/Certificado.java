@@ -18,9 +18,12 @@ public class Certificado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
+
     private Date dataEmissao;
+
+
     private Date dataVencimento;
 
 
-
 }
+

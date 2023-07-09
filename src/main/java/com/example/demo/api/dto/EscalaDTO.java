@@ -6,12 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class EscalaDTO {
     private Long id;
     private String titulo;
@@ -21,7 +22,13 @@ public class EscalaDTO {
 
     public static EscalaDTO create(Escala escala) {
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(escala, EscalaDTO.class);
-    }
+        EscalaDTO dto = modelMapper.map(escala, EscalaDTO.class);
 
+        LocalDate inicio = dto.getDataInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fim = inicio.plusDays(dto.getQtdDias());
+        dto.setDataFim(Date.from(fim.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+
+        return dto;
+    }
 }
+
