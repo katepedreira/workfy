@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -16,19 +16,22 @@ import java.util.Date;
 public class EscalaDTO {
     private Long id;
     private String titulo;
-    private Date dataInicio;
-    private Date dataFim;
+    private String dataInicio;
+    private String dataFim;
     private Integer qtdDias;
 
     public static EscalaDTO create(Escala escala) {
         ModelMapper modelMapper = new ModelMapper();
         EscalaDTO dto = modelMapper.map(escala, EscalaDTO.class);
 
-        LocalDate inicio = dto.getDataInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate fim = inicio.plusDays(dto.getQtdDias());
-        dto.setDataFim(Date.from(fim.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        if (dto.getDataInicio() != null && dto.getQtdDias() != null) {
+            LocalDate inicio = LocalDate.parse(dto.getDataInicio(), DateTimeFormatter.ISO_LOCAL_DATE);
+            LocalDate fim = inicio.plusDays(dto.getQtdDias());
+            dto.setDataFim(fim.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        }
 
         return dto;
     }
 }
+
 

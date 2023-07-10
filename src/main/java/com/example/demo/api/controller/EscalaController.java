@@ -10,6 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Timestamp;
+import java.sql.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,11 +87,27 @@ public class EscalaController {
     }
 
     public Escala converter(EscalaDTO dto) {
-        ModelMapper modelMapper = new ModelMapper();
-        Escala escala = modelMapper.map(dto, Escala.class);
+        Escala escala = new Escala();
+        escala.setId(dto.getId());
+        escala.setTitulo(dto.getTitulo());
+
+        if (dto.getDataInicio() != null && dto.getQtdDias() != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dataInicio = LocalDate.parse(dto.getDataInicio().toString(), formatter);
+            LocalDate dataFim = dataInicio.plusDays(dto.getQtdDias());
+            escala.setDataInicio(dataInicio);
+            escala.setDataFim(java.sql.Date.valueOf(dataFim));
+        }
+
+        escala.setQtdDias(dto.getQtdDias());
 
         return escala;
     }
+
+
+
+
+
 
 
 }
